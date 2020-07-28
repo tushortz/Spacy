@@ -12,26 +12,20 @@ app = Flask(__name__)
 def api_root():
     return 'Welcome'
 
-@app.route('/articles')
+@app.route('/ner')
 def api_articles():
     return 'List of ' + url_for('api_articles')
 
-@app.route('/articles/<rawtext>')
+@app.route('/ner/<rawtext>')
 def getNER(rawtext):
-    choice = "geopolitical"
-    results = "boh"
     doc = nlp(rawtext)
     d = []
     for ent in doc.ents:
         d.append((ent.label_, ent.text))
         df = pd.DataFrame(d, columns=('named entity', 'output'))
-        ORG_named_entity = df.loc[df['named entity'] == 'ORG']['output']
-        PERSON_named_entity = df.loc[df['named entity'] == 'PERSON']['output']
         GPE_named_entity = df.loc[df['named entity'] == 'GPE']['output']
-        MONEY_named_entity = df.loc[df['named entity'] == 'MONEY']['output']
 
     return GPE_named_entity.to_json(orient='split')
-    #return rawtext
 
 if __name__ == '__main__':
     app.run(debug=True)
