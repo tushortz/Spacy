@@ -1,1 +1,1 @@
-web: gunicorn app:flaskAPI
+web: gunicorn wsgi:app
